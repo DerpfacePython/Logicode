@@ -59,6 +59,7 @@ def Inject(scope, keys, values):
 
 rWhitespace = re.compile(r"[ \t]+", re.M)
 rNewlines = re.compile(r"[\r\n]+", re.M)
+rInput = re.compile(r"input")
 rName = re.compile(r"[A-Z_$]+", re.I)
 rBit = re.compile(r"[01]")
 rBits = re.compile(r"[01]+")
@@ -71,7 +72,6 @@ rCircuit = re.compile(r"circ ")
 rVariable = re.compile(r"var ")
 rCondition = re.compile(r"cond ")
 rOut = re.compile(r"out ")
-rInput = re.compile(r"input")
 rComment = re.compile(r"#.+")
 rLambda = re.compile(r"->")
 rOr = re.compile(r"/")
@@ -81,11 +81,11 @@ rPlus = re.compile(r"\+")
 rRandom = re.compile(r"\?")
 
 grammars = {
+    "Input": [rInput],
     "Bit": [rBit],
     "Bits": [rBits],
     "Name": [rName],
     "Random": [rRandom],
-    "Input": [rInput],
     "Literal": [["|", "Bits", "Name", "Random", "Input"]],
     "Arguments": [rOpenParenthesis, ["?", rName, ["*", rComma, rName]], rCloseParenthesis],
     "Call Arguments": [rOpenParenthesis, ["?", "Literal", ["*", rComma, "Literal"]], rCloseParenthesis],
@@ -98,7 +98,7 @@ grammars = {
     "Circuit": [rCircuit, rName, "Arguments", rLambda, "Expression"],
     "Variable": [rVariable, rName, rEquals, "Expression"],
     "Out": [rOut, "Expression"],
-    "Condition": [rCondition, rName, rLambda, [["Variable"], ["Out"]], rOr, [["Variable"], ["Out"]]],
+    "Condition": [rCondition, rName, rLambda, ["|", "Variable", "Out"], rOr, ["|", "Variable", "Out"]],
     "Comment": [rComment],
     "Program": [["+", ["|", "Circuit", "Variable", "Condition", "Out", "Comment", rNewlines]]]
 }
@@ -118,7 +118,7 @@ def Name(result):
 
 
 def Input(result):
-    return lambda scope: [raw_input(">>> ")]
+    return lambda scope: raw_input(">>> ")
 
 
 def Literal(result):
@@ -190,6 +190,7 @@ def Variable(result):
 
 
 def Condition(result):
+    print(result)
     if_true = result[3]
     if_false = result[5]
     return lambda scope: lambda condition: if_true(scope) if condition else if_false(scope)
@@ -204,9 +205,9 @@ def Print(result):
 
 
 transform = {
+    "Input": Input,
     "Bits": Bits,
     "Name": Name,
-    "Input": Input,
     "Literal": Literal,
     "Random": Random,
     "Arguments": Arguments,
@@ -215,8 +216,8 @@ transform = {
     "Expression": Expression,
     "Circuit": Circuit,
     "Variable": Variable,
+    "Out": Out,
     "Condition": Condition,
-    "Out": Out
 }
 
 mins = {
