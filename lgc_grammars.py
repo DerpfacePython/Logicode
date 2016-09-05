@@ -5,6 +5,9 @@ class GrammarParse():
     def __init__(self):
         pass
 
+    def ScopeTransform(result):
+        return lambda scope: Print(repr(scope))
+
     def NoLambda(self, result):
         return lambda scope: None
 
@@ -102,15 +105,6 @@ class GrammarParse():
             scope["input"] = list(map(int, filter(lambda c: c == "0" or c == "1", raw_input(">>> "))))[::-1]
         return scope["input"].pop()
 
-    def Print(self, result):
-        print("".join(list(map(str, result))))
-
-    def Transform(self, token, argument):
-        return (transform.get(token, self.Noop)(argument[0]), argument[1])
-
-    def NoTransform(self, token, argument):
-        return argument
-
 
 class Scope:
     def __init__(self, parent={}):
@@ -151,5 +145,3 @@ class Scope:
 
     def delete(self, key):
         del self[key]
-
-
