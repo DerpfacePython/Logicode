@@ -18,9 +18,9 @@ There are more built-ins:
 
 You can make extra things from these commands, like circuits and variables.
 
-##Make-your-own Things
+## Make-your-own Things
 
-###Circuits
+### Circuits
 To create a circuit, you have to do this:
 
 `circ circuit_name(arg1, arg2...)->{what the function does}`
@@ -33,30 +33,30 @@ Like this:
 
 `circ circuit_name(arg1, arg2...)->{1st bit}+{2nd bit}+...`
 
-###Variables
+### Variables
 To create a variable:
 
 `var var_name=value`
 
 `var` is the variable declaration.
 
-###Conditions
+### Conditions
 To create a condition:
 
 `cond arg->{executed if arg = 1}/{executed if arg = 0}`
 
 `cond` is the variable declaration, `arg` is either a value of `0` or `1`, and the `/` is the separator of the two executing strings.
 
-##I/O
+## I/O
 
-###Output
+### Output
 There is also output as well:
 
 `out out_value`
 
 `out` is the output declaration, and you can include the built-in commands, as well as self-made circuits, into the output to be processed.
 
-##Example code:
+## Example code:
 
     circ xor(a,b)->(!(a&b))&(a|b)
     var test=xor(1,1)
