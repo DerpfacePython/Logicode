@@ -12,7 +12,10 @@ if not hasattr(__builtins__, "raw_input"):
 if not hasattr(__builtins__, "basestring"):
     basestring = str
 
-regex = re._pattern_type
+if hasattr(re, "Pattern"):
+    regex = re.Pattern
+else:
+    regex = re._pattern_type
 
 rWhitespace = re.compile(r"[ \t]+", re.M)
 rCommandSeparator = re.compile(r"[\r\n;]+", re.M)
